@@ -37,6 +37,7 @@ namespace QuanLyKhachSan
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.btnThoat = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -61,6 +62,7 @@ namespace QuanLyKhachSan
             this.button1.TabIndex = 1;
             this.button1.Text = "Lập danh mục phòng";
             this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
@@ -72,6 +74,7 @@ namespace QuanLyKhachSan
             this.button2.TabIndex = 2;
             this.button2.Text = "Lập phiếu thuê phòng";
             this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -83,6 +86,7 @@ namespace QuanLyKhachSan
             this.button3.TabIndex = 3;
             this.button3.Text = "Tra cứu phòng";
             this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // btnHDTT
             // 
@@ -100,12 +104,13 @@ namespace QuanLyKhachSan
             // 
             this.button5.BackColor = System.Drawing.Color.Transparent;
             this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button5.Location = new System.Drawing.Point(65, 232);
+            this.button5.Location = new System.Drawing.Point(65, 225);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(265, 47);
+            this.button5.Size = new System.Drawing.Size(265, 61);
             this.button5.TabIndex = 5;
-            this.button5.Text = "Lập báo cáo tháng";
+            this.button5.Text = "Lập báo cáo doanh thu theo loại phòng";
             this.button5.UseVisualStyleBackColor = false;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button6
             // 
@@ -117,12 +122,13 @@ namespace QuanLyKhachSan
             this.button6.TabIndex = 6;
             this.button6.Text = "Thay đổi qui định";
             this.button6.UseVisualStyleBackColor = false;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // btnThoat
             // 
             this.btnThoat.BackColor = System.Drawing.Color.Transparent;
             this.btnThoat.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnThoat.Location = new System.Drawing.Point(212, 312);
+            this.btnThoat.Location = new System.Drawing.Point(365, 309);
             this.btnThoat.Name = "btnThoat";
             this.btnThoat.Size = new System.Drawing.Size(265, 47);
             this.btnThoat.TabIndex = 7;
@@ -130,11 +136,24 @@ namespace QuanLyKhachSan
             this.btnThoat.UseVisualStyleBackColor = false;
             this.btnThoat.Click += new System.EventHandler(this.btnThoat_Click);
             // 
+            // button4
+            // 
+            this.button4.BackColor = System.Drawing.Color.Transparent;
+            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.Location = new System.Drawing.Point(65, 303);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(265, 59);
+            this.button4.TabIndex = 8;
+            this.button4.Text = "Lập báo cáo mật độ sử dụng phòng";
+            this.button4.UseVisualStyleBackColor = false;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // App
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(683, 395);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.btnThoat);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
@@ -160,6 +179,7 @@ namespace QuanLyKhachSan
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button btnThoat;
+        private System.Windows.Forms.Button button4;
     }
 }
 

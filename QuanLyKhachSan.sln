@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuanLyKhachSan", "QuanLyKhachSan\QuanLyKhachSan.csproj", "{325B40EA-A1EC-462E-A0F6-19BB280D61F8}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup4", "Setup4\Setup4.vdproj", "{10324151-228A-4E3F-9E48-E5FAD6288202}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{325B40EA-A1EC-462E-A0F6-19BB280D61F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{325B40EA-A1EC-462E-A0F6-19BB280D61F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{325B40EA-A1EC-462E-A0F6-19BB280D61F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{325B40EA-A1EC-462E-A0F6-19BB280D61F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10324151-228A-4E3F-9E48-E5FAD6288202}.Debug|Any CPU.ActiveCfg = Debug
+		{10324151-228A-4E3F-9E48-E5FAD6288202}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B3D5EB6F-FBE3-47D5-8B69-A36A5F1CAB76}
+	EndGlobalSection
+EndGlobal

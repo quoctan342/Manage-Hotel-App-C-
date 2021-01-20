@@ -20,7 +20,13 @@ namespace QuanLyKhachSan.HoaDon
             InitializeComponent();
             DateTime date = DateTime.Now;
             txtNgayTT.Text = String.Format("{0:d/M/yyyy}", date);
-
+            dgvHoaDon.ColumnCount = 6;
+            dgvHoaDon.Columns[0].Name = "Mã phiếu thuê phòng";
+            dgvHoaDon.Columns[1].Name = "Mã phòng";
+            dgvHoaDon.Columns[2].Name = "Phòng";
+            dgvHoaDon.Columns[3].Name = "Số ngày thuê";
+            dgvHoaDon.Columns[4].Name = "Đơn giá";
+            dgvHoaDon.Columns[5].Name = "Thành tiền";
         }
 
         private void btnThoat_Click(object sender, EventArgs e)
@@ -30,85 +36,46 @@ namespace QuanLyKhachSan.HoaDon
 
         private void btnThemPTP_Click(object sender, EventArgs e)
         {
-            string maptp = txtNhapPTP.Text;
-            string songaythue = txtSoNgayThue.Text;
-            if (maptp == "")
-            {
-                MessageBox.Show("Bạn chưa nhập phiếu thuê phòng");
-                return;
-            }
-            if (songaythue == "")
-            {
-                MessageBox.Show("Bạn chưa nhập số ngày thuê");
-                return;
-            }
-            PhieuThuePhong ptp = db.PhieuThuePhongs.Find(maptp);
-            if (ptp == null)
-            {
-                MessageBox.Show("Mã phiếu thuê phòng không tồn tại.");
-                return;
-            }
-            var checkptp = from c in db.CT_HoaDon where c.MaPhieuThuePhong == maptp select c;
-            if (checkptp.Count() != 0)
-            {
-                MessageBox.Show("Mã phiếu thuê phòng đã được thanh toán rồi");
-                return;
-            }
-
-        
-
-            Phong ph = db.Phongs.Find(ptp.MaPhong);
-            LoaiPhong lp = db.LoaiPhongs.Find(ph.MaLoaiPhong);
-
-
-            dgvHoaDon.ColumnCount = 5;
-
-            dgvHoaDon.Columns[0].Name = "Mã phiếu thuê phòng";
-            dgvHoaDon.Columns[1].Name = "Mã phòng";
-            dgvHoaDon.Columns[2].Name = "Số ngày thuê";
-            dgvHoaDon.Columns[3].Name = "Đơn giá";
-            dgvHoaDon.Columns[4].Name = "Thành tiền";
-
-            double thanhtien = lp.DonGia * int.Parse(txtSoNgayThue.Text);
-
-            string[] row1;
-            
-            row1 = new string[] {
-                                    ptp.MaPhieuThuePhong,
-                                    ptp.MaPhong,
-                                    txtSoNgayThue.Text,
-                                    lp.DonGia.ToString(),
-                                    thanhtien.ToString()
-            };
-            for (int i = 0; i < (dgvHoaDon.Rows.Count - 1); i++)
-            {
-                string checkmaptp = dgvHoaDon[0, i].Value.ToString();
-
-                if (checkmaptp == ptp.MaPhieuThuePhong)
+            KhachHang kh = db.KhachHangs.Find(txtMKH.Text);
+            txtKhach.Text = kh.TenKhachHang;
+            txtDiaChi.Text = kh.DiaChi;
+            txtMaKH.Text = kh.MaKhachHang;
+            var result = from a in db.PhieuThuePhongs
+                         from c in db.CT_PhieuThuePhong
+                         from b in db.Phongs
+                         from d in db.LoaiPhongs
+                         where (c.MaKhachHang == kh.MaKhachHang && c.MaPhieuThuePhong == a.MaPhieuThuePhong
+                         && a.MaPhong == b.MaPhong && b.MaLoaiPhong == d.MaLoaiPhong)
+                         select new { a.MaPhieuThuePhong, b.MaPhong, b.TenPhong, a.NgayBatDauThue, d.DonGia};
+            foreach (var i in result) {
+                var tee = from c in db.CT_HoaDon where c.MaPhieuThuePhong == i.MaPhieuThuePhong select c;
+                if (tee.Count() != 0)
                 {
-                    MessageBox.Show("Mã phiếu thuê phòng này đã được thêm bên dưới");
-                    return;
+                    continue;
                 }
+                double songaythue = (DateTime.Now - i.NgayBatDauThue).TotalDays;
+                int songay = Convert.ToInt32(songaythue);
+                double dongia = i.DonGia;
+                double thanhtien = dongia * songay;
+                string[] row1 = new string[] {
+                    i.MaPhieuThuePhong,
+                    i.MaPhong,
+                    i.TenPhong,
+                    songay.ToString(),
+                    i.DonGia.ToString(),
+                    thanhtien.ToString()
+                };
+
+                dgvHoaDon.Rows.Add(row1);
             }
-            dgvHoaDon.Rows.Add(row1);
-
-            txtNhapPTP.Text = string.Empty;
-            txtSoNgayThue.Text = string.Empty;
-
-        }
-
-        private void txtSoNgayThue_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!Char.IsDigit(e.KeyChar) && !Char.IsControl(e.KeyChar))
-                e.Handled = true;
         }
 
         void TinhTongTienHoaDon()
         {
             double tong = 0;
-            for (int i = 0; i < (dgvHoaDon.Rows.Count - 1); i++)
+            for (int i = 0; i < (dgvHoaDon.Rows.Count); i++)
             {
-                tong = tong + double.Parse(dgvHoaDon[4, i].Value.ToString());
+                tong = tong + double.Parse(dgvHoaDon[5, i].Value.ToString());
             }
 
             txtTriGia.Text = tong.ToString();
@@ -120,6 +87,7 @@ namespace QuanLyKhachSan.HoaDon
             txtKhach.Text = string.Empty;
             txtDiaChi.Text = string.Empty;
             DateTime d = DateTime.Now;
+            txtMaKH.Text = "";
             txtNgayTT.Text = String.Format("{0:d/M/yyyy}", d);
             dgvHoaDon.DataSource = null;
             dgvHoaDon.Rows.Clear();
@@ -143,72 +111,36 @@ namespace QuanLyKhachSan.HoaDon
 
         private void btnLapHD_Click(object sender, EventArgs e)
         {
-            if (txtKhach.Text == "")
-            {
-                MessageBox.Show("Tên khách hàng/ cơ quan thanh toán không được bỏ trống");
-                return;
-            }
-            if (txtDiaChi.Text == "")
-            {
-                MessageBox.Show("Địa chỉ của khách hàng/ cơ quan thanh toán không được bỏ trống");
-                return;
-            }
-            if (dgvHoaDon.Rows.Count == 0)
-            {
-                MessageBox.Show("Hóa đơn không được bỏ trống phần thanh toán ");
-                return;
-            }
             var result = from c in db.HoaDonTTs select c;
-            int id = 0;
-            foreach (var i in result)
+            HoaDonTT hd = new HoaDonTT()
             {
-                id = id + 1;
-            }
-
-            HoaDonTT hdtt = new HoaDonTT()
-            {
-                MaHoaDon = "HD" + (id + 1),
-                NguoiThanhToan = txtKhach.Text,
-                DiaChiNguoiThanhToan = txtDiaChi.Text,
-                NgayThanhToan = DateTime.Parse(txtNgayTT.Text),
-                TriGia = double.Parse(txtTriGia.Text),
-                Xoa = 0,
-                Thang = String.Format("{0:M/yyyy}", DateTime.Parse(txtNgayTT.Text))
+                MaHoaDon = "HD" + (result.Count() + 1),
+                MaKhachhang = txtMaKH.Text,
+                NgayThanhToan = Convert.ToDateTime(txtNgayTT.Text),
+                TriGia = float.Parse(txtTriGia.Text),
+                Xoa = 0
             };
-            db.HoaDonTTs.Add(hdtt);
-            db.SaveChanges();
-            if (db.SaveChanges() == 0) { 
-                for (int i = 0; i < (dgvHoaDon.Rows.Count - 1); i++)
+            db.HoaDonTTs.Add(hd);
+            string mahoadon = "HD" + (result.Count() + 1);
+            for (int i = 0; i < dgvHoaDon.Rows.Count; i++)
+            {
+                var re = from c in db.CT_HoaDon select c;
+                CT_HoaDon ct = new CT_HoaDon()
                 {
-                    var result2 = from c in db.CT_HoaDon select c;
-                    int id_cthd = 0;
-                    foreach (var j in result2)
-                    {
-                        id_cthd = id_cthd + 1;
-                    }
+                    MaCTHoaDon = "CTHD" + (re.Count() + 1),
+                    MaHoaDon = mahoadon,
+                    MaPhieuThuePhong = dgvHoaDon[0, i].Value.ToString(),
+                    SoNgayThue = int.Parse(dgvHoaDon[3, i].Value.ToString()),
+                    ThanhTien = float.Parse(dgvHoaDon[4, i].Value.ToString()),
+                    TriGia = float.Parse(dgvHoaDon[5, i].Value.ToString())
+                };
+                db.CT_HoaDon.Add(ct);
+                db.SaveChanges();
 
-                    string maphieuthuephong = dgvHoaDon[0, i].Value.ToString();
-                    double thanhtien = double.Parse(dgvHoaDon[3, i].Value.ToString());
-                    double trigia = double.Parse(dgvHoaDon[4, i].Value.ToString());
-                    int songaythue = int.Parse(dgvHoaDon[2,i].Value.ToString());
-                    CT_HoaDon cthd = new CT_HoaDon()
-                    {
-                        MaCTHoaDon = "CTHD" + (id_cthd + 1),
-                        MaHoaDon = "HD" + (id + 1),
-                        MaPhieuThuePhong = maphieuthuephong,
-                        SoNgayThue = songaythue,
-                        ThanhTien = thanhtien,
-                        TriGia = trigia
-                    };
-
-
-                    db.CT_HoaDon.Add(cthd);
-                    db.SaveChanges();
-                }
-                MessageBox.Show("Thêm hóa đơn thành công. Hóa đơn có mã: HD" + (id + 1));
-                ResetForm();
             }
 
+            db.SaveChanges();
+            MessageBox.Show("Lập hóa đơn thành công");
         }
 
         private void txtMaHD_TextChanged(object sender, EventArgs e)
@@ -219,27 +151,23 @@ namespace QuanLyKhachSan.HoaDon
             }
             string mahd = txtMaHD.Text;
             HoaDonTT hd = db.HoaDonTTs.Find(mahd);
-
-            txtKhach.Text = hd.NguoiThanhToan;
-            txtDiaChi.Text = hd.DiaChiNguoiThanhToan;
+            txtMaKH.Text = hd.MaKhachhang;
+            KhachHang kh = db.KhachHangs.Find(hd.MaKhachhang);
+            txtKhach.Text = kh.TenKhachHang;
+            txtDiaChi.Text = kh.DiaChi;
             txtNgayTT.Text = String.Format("{0:d/M/yyyy}", hd.NgayThanhToan);
             var result = from c in db.CT_HoaDon
                          from a in db.PhieuThuePhongs
-                         where (c.MaHoaDon == mahd && c.MaPhieuThuePhong == a.MaPhieuThuePhong)
-                         select new { c.MaPhieuThuePhong, a.MaPhong, c.SoNgayThue, c.ThanhTien, c.TriGia };
-            dgvHoaDon.ColumnCount = 5;
-
-            dgvHoaDon.Columns[0].Name = "Mã phiếu thuê phòng";
-            dgvHoaDon.Columns[1].Name = "Mã phòng";
-            dgvHoaDon.Columns[2].Name = "Số ngày thuê";
-            dgvHoaDon.Columns[3].Name = "Đơn giá";
-            dgvHoaDon.Columns[4].Name = "Thành tiền";
+                         from b in db.Phongs
+                         where (c.MaHoaDon == mahd && c.MaPhieuThuePhong == a.MaPhieuThuePhong && a.MaPhong == b.MaPhong)
+                         select new { c.MaPhieuThuePhong, a.MaPhong, c.SoNgayThue, c.ThanhTien, c.TriGia, b.TenPhong };
             string[] row1;
 
             foreach (var i in result) {
                 row1 = new string[] {
                                         i.MaPhieuThuePhong,
                                         i.MaPhong,
+                                        i.TenPhong,
                                         i.SoNgayThue.ToString(),
                                         i.ThanhTien.ToString(),
                                         i.TriGia.ToString()
@@ -289,8 +217,6 @@ namespace QuanLyKhachSan.HoaDon
         {
             string mahd = txtMaHD.Text;
             HoaDonTT hd = db.HoaDonTTs.Find(mahd);
-            hd.NguoiThanhToan = txtKhach.Text;
-            hd.DiaChiNguoiThanhToan = txtDiaChi.Text;
 
             for (int i = 0; i < (dgvHoaDon.Rows.Count - 1); i++)
             {
@@ -354,6 +280,21 @@ namespace QuanLyKhachSan.HoaDon
         }
 
         private void dgvHoaDon_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void HDon_Load(object sender, EventArgs e)
         {
 
         }

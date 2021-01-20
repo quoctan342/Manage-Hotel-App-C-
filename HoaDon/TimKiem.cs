@@ -27,22 +27,27 @@ namespace QuanLyKhachSan.HoaDon
 
         void btnTimKiem_Click(object sender, EventArgs e)
         {
-            string mahd = this.txtMaHoaDon.Text;
-            if (txtMaHoaDon.Text == "")
-            {
-                MessageBox.Show("Bạn chưa điền mã hóa đơn cần tìm.");
-                return;
-            }
-            var result = from c in db.HoaDonTTs where (c.MaHoaDon == mahd && c.Xoa == 0) select c;
-            if (result.Count() == 0)
-            {
-                MessageBox.Show("Hóa đơn thanh toán này không tồn tại.");
-                return;
-            }
-
-            this.fh(this.txtMaHoaDon.Text);
+            this.fh(this.cbbHoaDon.Text);
             this.Close();        
         }
 
+        private void TimKiem_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtTenKH_Leave(object sender, EventArgs e)
+        {
+            var result = from c in db.HoaDonTTs
+                         from d in db.KhachHangs
+                         where (d.TenKhachHang == txtTenKH.Text && d.MaKhachHang == c.MaKhachhang)
+                         select new
+                         {
+                             c.MaHoaDon
+                         };
+            cbbHoaDon.DataSource = result.ToList();
+            cbbHoaDon.DisplayMember = "MaHoaDon";
+            cbbHoaDon.ValueMember = "MaHoaDon";
+        }
     }
 }

@@ -12,21 +12,22 @@ namespace QuanLyKhachSan
     using System;
     using System.Collections.Generic;
     
-    public partial class HoaDonTT
+    public partial class Phong
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public HoaDonTT()
+        public Phong()
         {
-            this.CT_HoaDon = new HashSet<CT_HoaDon>();
+            this.PhieuThuePhongs = new HashSet<PhieuThuePhong>();
         }
     
-        public string MaHoaDon { get; set; }
-        public string MaKhachhang { get; set; }
-        public System.DateTime NgayThanhToan { get; set; }
-        public double TriGia { get; set; }
-        public Nullable<int> Xoa { get; set; }
+        public string MaPhong { get; set; }
+        public string TinhTrang { get; set; }
+        public string MaLoaiPhong { get; set; }
+        public string MaDanhMucPhong { get; set; }
+        public string TenPhong { get; set; }
     
+        public virtual LoaiPhong LoaiPhong { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CT_HoaDon> CT_HoaDon { get; set; }
+        public virtual ICollection<PhieuThuePhong> PhieuThuePhongs { get; set; }
     }
 }
